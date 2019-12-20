@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.egovstudy.bbs.mapper.MemberMapper">
+	<!-- CREATE -->
+	<insert id="insert">
+		INSERT INTO member VALUES(#{id},#{pw},#{name},#{tel});
+	</insert>
+	<!-- READ -->
+	<select id="selectByIdAndPw" resultType="com.egovstudy.bbs.vo.Member">
+		SELECT * FROM member where id = #{id} AND pw = #{pw}
+	</select>
+	<!-- UPDATE -->
+	<update id="update">
+		UPDATE member
+		SET pw = #{pw},
+			name = #{name},
+			tel = #{tel}
+		WHERE id = #{id}
+	</update>
+	<!-- DELETE -->
+	<delete id="delete">
+		DELETE FROM member WHERE id = #{id}
+	</delete>
+</mapper>
