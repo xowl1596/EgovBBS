@@ -6,8 +6,8 @@
             <PatternLayout pattern="%d %5p [%c] %m%n" />
         </Console>
         
-        <RollingFile name="file" fileName="/LOG/kostiedu_adm.log" filePattern="/LOG/kostiedu_adm.log.%d{yyyy-MM-dd}">
-            <PatternLayout pattern="%d %5p [%c{1}.%M(%L)] - %m%n" />
+        <RollingFile name="file" fileName="/LOG/egovstudy.log" filePattern="/LOG/egovstudy.log.%d{yyyy-MM-dd}">
+            <PatternLayout pattern="Log4j2-REAL : %d %5p [%c{1}.%M(%L)] - %m%n" />
             <Policies>
                 <TimeBasedTriggeringPolicy />
             </Policies>

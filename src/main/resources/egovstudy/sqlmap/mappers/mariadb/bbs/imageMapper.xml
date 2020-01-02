@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.egovstudy.bbs.mapper.ImageMapper">
+	<!-- CREATE -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO image VALUES(#{path},#{post}, #{seq});
+	</insert>
+	<!-- READ -->
+	<select id="selectByPostAndSeq" resultType="com.egovstudy.bbs.vo.Image">
+		SELECT * FROM image WHERE post=#{post} AND seq=#{seq}
+	</select>
+	
+	<select id="selectByPost" resultType="com.egovstudy.bbs.vo.Image">
+		SELECT * FROM image WHERE post=#{post}
+	</select>
+	<!-- UPDATE -->
+
+	<!-- DELETE -->
+
+</mapper>

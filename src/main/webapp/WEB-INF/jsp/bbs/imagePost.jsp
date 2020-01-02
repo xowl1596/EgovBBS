@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -14,6 +15,11 @@
 			<div>
 				<div>${post.getWriter()}</div><hr>
 				<div>${post.getTitle()}</div><hr>
+				<div>
+					<c:forEach var="image" items="${images}">
+						<img src="/bbs/postImage/${image.post}/${image.seq}.do" width="500px"><br>
+					</c:forEach>
+				</div>
 				<pre>
 ${post.getContent()}
 				</pre>
@@ -24,7 +30,6 @@ ${post.getContent()}
 					</form>
 					
 					<div id="commentList">
-						<div>Comments</div><hr>
 					</div>
 				</div>
 				<a class="btn btn-primary" href="/bbs/postModify/${post.getId()}.do">Modify</a>
@@ -32,22 +37,5 @@ ${post.getContent()}
 			</div>
 		</main>
 	</div>
-	<script>
-	$.ajax({
-		url : '/bbs/comment/list/' + ${post.getId()} + '.do',
-		type : 'get',
-		dataType : "json",
-		success : function(response) {
-			console.log(response);
-			for(var i = 0; i < response.length; i++){
-				$('#commentList').append(response[i].writer + " | " + response[i].content + "<br>");
-			}
-		},
-		fail : function(error) {
-			alert('!!!Error!!!');
-		},
-		always : function(response) {}
-	});
-	</script>
 </body>
 </html>

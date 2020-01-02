@@ -80,7 +80,7 @@ public class PostController {
 		Member member = (Member) session.getAttribute("member");
 		Post post = postService.getById(id);
 		
-		if(member.getId().equals(post.getWriter())){
+		if(member != null && member.getId().equals(post.getWriter())){
 			mav.addObject("post", post);
 		} else {
 			session.setAttribute("idCheckResult", "fail");

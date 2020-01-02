@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.egovstudy.bbs.mapper.ImagePostMapper">
+	<!-- CREATE -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO imagepost(writer, title, content) VALUES(#{writer},#{title},#{content})
+	</insert>
+	<!-- READ -->
+	<select id="selectAll" resultType="com.egovstudy.bbs.vo.ImagePost">
+		SELECT * FROM imagepost
+	</select>
+	<select id="selectById" resultType="com.egovstudy.bbs.vo.ImagePost">
+		SELECT * FROM imagepost WHERE id = #{id}
+	</select>
+	<!-- UPDATE -->
+	<update id="updateThumbnailPath">
+		UPDATE imagepost SET thumbnail = #{thumbnail} WHERE id = #{id}
+	</update>
+	<!-- DELETE -->
+
+</mapper>

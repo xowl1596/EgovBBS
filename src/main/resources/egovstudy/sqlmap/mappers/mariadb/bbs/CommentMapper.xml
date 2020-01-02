@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.egovstudy.bbs.mapper.CommentMapper">
+	<!-- CREATE -->
+	<insert id="insert">
+		INSERT INTO comment(writer, post, content)
+		VALUES(#{writer},#{post},#{content})
+	</insert>
+	
+	<!-- READ -->
+	<select id="getListByPostId" resultType="com.egovstudy.bbs.vo.Comment">
+		SELECT * FROM comment WHERE post = #{id}
+	</select>
+	<!-- UPDATE -->
+
+	<!-- DELETE -->
+
+</mapper>

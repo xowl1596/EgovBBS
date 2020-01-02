@@ -16,6 +16,7 @@
 			out.print("alert(\"invalid ID or PW\")");
 			out.print("</script>");
 		}
+		session.removeAttribute("loginResult");
 	%>
 	<div class="container">
 		<%@include file="./includes/header.jsp"%>

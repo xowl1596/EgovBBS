@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@include file="./includes/imports.jsp" %>
+<link rel="stylesheet" type="text/css" href="/bbs/common/css/imageList.css">
 <title>Insert title here</title>
 </head>
 <body>
@@ -21,43 +23,23 @@
 					</li>
 				</ul>
 			</nav>
-			<table id="boardTable" class="display">
-			<thead>
-					<tr>
-						<th>id</th>
-						<th>title</th>
-						<th>writer</th>
-					</tr>
-				</thead>
-			</table>
-			<a href="/bbs/write.do" class="btn btn-light">write</a>
+			<a href="/bbs/imageWrite.do" class="btn btn-light">write</a>
+			<div class="album row">
+				<c:forEach var="post" items="${posts}" >
+					<div class="col-md-4">
+						<div class="card mb-4 box-shadow">
+							<img class="card-img-top" src="/bbs/thumbnail/${post.id}.do">
+							<div class="card-body">
+								<a href="/bbs/imagePost/${post.id}.do"><c:out value="${post.title}"/></a>
+							</div>
+						</div>
+					</div>
+				</c:forEach>
+			</div>
 		</div>
 	</div>
 
 	<script>
-		$(document).ready(function() {
-			$('#boardTable').DataTable({
-				"ajax" :
-					"http://localhost:8080/bbs/posts.do",
-				"info" : 
-					false,
-				"ordering" : 
-					false,
-				"columns" :
-					[
-						{"data" : "id"},
-						{"data" : "title",
-						 "render" : function(data, type,row, meta) {
-										if (type === 'display') {
-											data = '<a href="/bbs/post/' + row.id + '.do">'+ data + '</a>';
-										}			
-										return data;
-									}
-						},
-						{"data" : "writer"}
-					]
-			});
-		});
 	</script>
 </body>
 </html>

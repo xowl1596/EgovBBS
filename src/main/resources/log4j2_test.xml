@@ -7,7 +7,7 @@
         </Console>
         
         <RollingFile name="file" fileName="/home/kosti/webapp/LOG/log.log" filePattern="/home/kosti/webapp/LOG/log.log.%d{yyyy-MM-dd}">
-            <PatternLayout pattern="%d %5p [%c{1}.%M(%L)] - %m%n" />
+            <PatternLayout pattern="Log4j2-TEST : %d %5p [%c{1}.%M(%L)] - %m%n" />
             <Policies>
                 <TimeBasedTriggeringPolicy />
             </Policies>
