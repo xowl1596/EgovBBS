@@ -12,4 +12,6 @@ public interface ImagePostMapper {
 	public List<ImagePost> selectAll();
 	public void updateThumbnailPath(ImagePost post);
 	public ImagePost selectById(int id);
+	public void delete(int id);
+	public void update(ImagePost post);
 }

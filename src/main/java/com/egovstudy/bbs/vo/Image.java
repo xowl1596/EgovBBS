@@ -4,6 +4,15 @@ public class Image {
 	private String path;
 	private int post;
 	private int seq;
+	private String fileName;
+	
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
 
 	public String getPath() {
 		return path;

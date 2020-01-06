@@ -22,7 +22,6 @@
 				<textarea class="form-control" rows="5" id="content" name="content"></textarea>
 			</div>
 			<div class="form-group">
-				<label for="content">Images:</label>
 				<input type="file" id="files" name="files" multiple>
 			</div>
 			<div id="fileUpload">
@@ -50,27 +49,104 @@
 				fileList.push(fileInput[i]);
 			}
 			
+			//배열을 FileList로 변환 후 폼에 갱신		
+			fileForm[0].files = createFileList(fileList);
+			refreshFileForm();
+		});
+		
+		function createFileList(files){
+			var dataTransfer = new DataTransfer();
+			
+			for(var i = 0; i < files.length; i++){
+				dataTransfer.items.add(files[i]);	
+			}
+			
+			return dataTransfer.files;
+		}
+		
+		function refreshFileForm(){
+			console.log(fileList);
+			upload.html("");
 			var html = "";
 			
 			for(var i = 0; i < fileList.length; i++){
-				console.log(fileList[i]);
-				html += "<div>" + fileList[i].name + "</div>";
+				getBase64(fileList[i], i, function(str, index){
+					html = 	"<div data-index=" + index + ">"+
+								"<img src='" + str + "' style='width:150px; height:100px;'>" + "<a class='up' href='#'>+</a>  <a class='down'  href='#'>-</a> <a class='delete' href='#'>x</a>"+
+							"</div>";
+					upload.append(html);
+					
+					$(".up").on("click", function(e){
+						e.stopPropagation();
+						e.preventDefault();
+
+						var index = $(this).parent().data('index');
+						
+						if(index <= 0){
+							return;
+						}
+
+						fileListSwap(index, index - 1);				
+						refreshFileForm();
+						
+						fileForm[0].files = createFileList(fileList);
+						console.log(fileForm[0].files);
+					});
+					
+					$(".down").on("click", function(e){
+						e.stopPropagation();
+						e.preventDefault();
+
+						var index = $(this).parent().data('index');
+
+						if(index >= fileList.length - 1){
+							return;
+						}
+						
+						fileListSwap(index, index + 1);
+						refreshFileForm();
+						
+						fileForm[0].files = createFileList(fileList);
+						console.log(fileForm[0].files);
+					});
+					
+					$(".delete").on("click", function(e){
+						e.stopPropagation();
+						e.preventDefault();
+
+						var index = $(this).parent().data('index');
+
+						fileList.splice(index, 1);
+						refreshFileForm();
+						
+						fileForm[0].files = createFileList(fileList);
+						console.log(fileForm[0].files);
+					});
+				});
 			}
 			
-			upload.html(html);
 			
-			//배열을 FileList로 변환 후 폼에 갱신
-			var dataTransfer = new DataTransfer();
+		}
+		
+		function fileListSwap(i, j){
+			var temp = fileList[i];
+			fileList[i] = fileList[j];
+			fileList[j] = temp;
+		}
+		
+		function getBase64(file, index, callback){
+			var str = "";
+			var reader = new FileReader();
+			reader.readAsDataURL(file);
 			
-			for(var i = 0; i < fileList.length; i++){
-				dataTransfer.items.add(fileList[i]);	
+			reader.onload = function(){
+				callback(reader.result, index);
 			}
 			
-			console.log(dataTransfer.files);
-			
-			fileForm[0].files = dataTransfer.files;
-			console.log(fileForm[0].files);
-		});
+			reader.onerror = function(){
+				console.log("???");
+			}
+		}
 	</script>
 </body>
 </html>

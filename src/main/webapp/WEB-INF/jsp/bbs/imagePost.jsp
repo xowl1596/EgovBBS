@@ -32,8 +32,8 @@ ${post.getContent()}
 					<div id="commentList">
 					</div>
 				</div>
-				<a class="btn btn-primary" href="/bbs/postModify/${post.getId()}.do">Modify</a>
-				<a class="btn btn-danger" href="/bbs/postDelete/${post.getId()}.do">Delete</a>
+				<a class="btn btn-primary" href="/bbs/imagePostModify/${post.getId()}.do">Modify</a>
+				<a class="btn btn-danger" href="/bbs/imagePostDelete/${post.getId()}.do">Delete</a>
 			</div>
 		</main>
 	</div>

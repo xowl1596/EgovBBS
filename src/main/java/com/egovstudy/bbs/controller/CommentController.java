@@ -24,8 +24,8 @@ public class CommentController {
 	@Resource(name="commentService")
 	CommentServiceImpl commentService;
 	
-	@RequestMapping(value="/bbs/comment/write/{id}.do", method=RequestMethod.POST)
-	public String commentWrite(HttpServletRequest req,Comment comment, @PathVariable int id){
+	@RequestMapping(value="/bbs/comment/write/{postId}.do", method=RequestMethod.POST)
+	public String commentWrite(HttpServletRequest req,Comment comment, @PathVariable int postId){
 		String resultUrl = "";
 		
 		HttpSession session = req.getSession();
@@ -34,12 +34,12 @@ public class CommentController {
 		
 		if(member != null){
 			comment.setWriter(member.getId());
-			comment.setPost(id);
+			comment.setPost(postId);
 			
 			commentService.write(comment);	
-			resultUrl = "redirect:/bbs/post/" + id +".do";
+			resultUrl = "redirect:/bbs/post/" + postId +".do";
 		} else{
-			resultUrl = "redirect:/bbs/post/" + id + ".do";
+			resultUrl = "redirect:/bbs/post/" + postId + ".do";
 		}
 		
 		return resultUrl;
@@ -51,5 +51,21 @@ public class CommentController {
 		List<Comment> list = commentService.readByPostId(postId);
 		
 		return list;
+	}
+	
+	@RequestMapping(value="/bbs/comment/delete/{postId}/{id}", method=RequestMethod.GET)
+	public String deleteComment(@PathVariable int postId ,@PathVariable int id){
+		commentService.remove(id);
+		return "redirect:/bbs/post/" + postId + ".do";
+	}
+	
+	@RequestMapping(value="/bbs/comment/modify/{postId}/{id}.do")
+	public String modifyComment(@PathVariable int postId,@PathVariable int id, String content){
+		Comment comment = new Comment();
+		comment.setId(id);
+		comment.setContent(content);
+		
+		commentService.modify(comment);
+		return "redirect:/bbs/post/" + postId + ".do";
 	}
 }

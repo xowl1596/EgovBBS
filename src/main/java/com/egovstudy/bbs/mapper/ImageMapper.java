@@ -11,4 +11,5 @@ public interface ImageMapper {
 	public void insert(Image image);
 	public Image selectByPostAndSeq(Image image);
 	public List<Image> selectByPost(int post);
+	public void delete(int post);
 }

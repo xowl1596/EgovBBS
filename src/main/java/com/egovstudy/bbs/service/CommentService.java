@@ -7,4 +7,6 @@ import com.egovstudy.bbs.vo.Comment;
 public interface CommentService {
 	public void write(Comment comment);
 	public List<Comment> readByPostId(int id);
+	public void modify(Comment comment);
+	public void remove(int id);
 }

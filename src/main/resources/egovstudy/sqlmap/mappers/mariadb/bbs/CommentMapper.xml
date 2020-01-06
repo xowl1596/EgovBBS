@@ -10,10 +10,14 @@
 	
 	<!-- READ -->
 	<select id="getListByPostId" resultType="com.egovstudy.bbs.vo.Comment">
-		SELECT * FROM comment WHERE post = #{id}
+		SELECT * FROM comment WHERE post = #{id} ORDER BY id DESC
 	</select>
 	<!-- UPDATE -->
-
+	<update id="update">
+		UPDATE comment SET content = #{content} WHERE id = #{id}
+	</update>
 	<!-- DELETE -->
-
+	<delete id="delete">
+		DELETE FROM comment WHERE id = #{id}
+	</delete>
 </mapper>

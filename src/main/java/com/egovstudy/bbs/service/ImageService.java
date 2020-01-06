@@ -8,4 +8,5 @@ public interface ImageService {
 	public void upload(Image image);
 	public Image readByPostAndSeq(Image image);
 	public List<Image> readByPost(int post);
+	public void removeByPostId(int id);
 }

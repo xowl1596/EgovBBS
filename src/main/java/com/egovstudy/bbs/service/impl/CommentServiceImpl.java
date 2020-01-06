@@ -24,6 +24,14 @@ public class CommentServiceImpl implements CommentService {
 	public List<Comment> readByPostId(int id) {
 		return commentMapper.getListByPostId(id);
 	}
-	
-	
+
+	@Override
+	public void remove(int id) {
+		commentMapper.delete(id);
+	}
+
+	@Override
+	public void modify(Comment comment) {
+		commentMapper.update(comment);
+	}
 }

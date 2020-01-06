@@ -9,4 +9,6 @@ public interface ImagePostService {
 	public List<ImagePost> readAll();
 	public void updateThumbnailPath(ImagePost post);
 	public ImagePost readById(int id);
+	public void remove(int id);
+	public void update(ImagePost post);
 }

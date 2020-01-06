@@ -34,6 +34,14 @@ public class ImagePostServiceImpl implements ImagePostService {
 	public ImagePost readById(int id) {
 		return imagePostMapper.selectById(id);
 	}
-	
-	
+
+	@Override
+	public void remove(int id) {
+		imagePostMapper.delete(id);
+	}
+
+	@Override
+	public void update(ImagePost post) {
+		imagePostMapper.update(post);
+	}
 }

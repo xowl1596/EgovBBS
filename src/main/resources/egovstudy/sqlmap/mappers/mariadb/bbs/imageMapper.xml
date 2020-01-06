@@ -4,7 +4,7 @@
 <mapper namespace="com.egovstudy.bbs.mapper.ImageMapper">
 	<!-- CREATE -->
 	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO image VALUES(#{path},#{post}, #{seq});
+		INSERT INTO image VALUES(#{path},#{post},#{seq},#{fileName});
 	</insert>
 	<!-- READ -->
 	<select id="selectByPostAndSeq" resultType="com.egovstudy.bbs.vo.Image">
@@ -12,10 +12,12 @@
 	</select>
 	
 	<select id="selectByPost" resultType="com.egovstudy.bbs.vo.Image">
-		SELECT * FROM image WHERE post=#{post}
+		SELECT * FROM image WHERE post=#{post} ORDER BY seq
 	</select>
 	<!-- UPDATE -->
-
+	
 	<!-- DELETE -->
-
+	<delete id="delete">
+		DELETE FROM image WHERE post = #{post}
+	</delete>
 </mapper>

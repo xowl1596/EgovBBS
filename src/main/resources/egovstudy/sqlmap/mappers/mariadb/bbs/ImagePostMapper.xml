@@ -8,7 +8,7 @@
 	</insert>
 	<!-- READ -->
 	<select id="selectAll" resultType="com.egovstudy.bbs.vo.ImagePost">
-		SELECT * FROM imagepost
+		SELECT * FROM imagepost ORDER BY id DESC
 	</select>
 	<select id="selectById" resultType="com.egovstudy.bbs.vo.ImagePost">
 		SELECT * FROM imagepost WHERE id = #{id}
@@ -17,6 +17,12 @@
 	<update id="updateThumbnailPath">
 		UPDATE imagepost SET thumbnail = #{thumbnail} WHERE id = #{id}
 	</update>
+	
+	<update id="update">
+		UPDATE imagepost SET title = #{title}, content = #{content} WHERE id = #{id}
+	</update>
 	<!-- DELETE -->
-
+	<delete id="delete">
+		DELETE FROM imagePost WHERE id = #{id}
+	</delete>
 </mapper>

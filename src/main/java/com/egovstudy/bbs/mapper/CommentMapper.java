@@ -14,7 +14,7 @@ public interface CommentMapper {
 //	READ
 	List<Comment> getListByPostId(int id);
 //	UPDATE
-	
+	void update(Comment comment);
 //	DELETE
-	
+	void delete(int id);
 }

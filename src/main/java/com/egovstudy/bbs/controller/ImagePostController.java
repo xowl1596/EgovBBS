@@ -2,7 +2,10 @@ package com.egovstudy.bbs.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -92,8 +95,8 @@ public class ImagePostController {
 				post.setContent(req.getParameter("content"));
 				imagePostService.write(post);
 				
-				boolean isFirstImage = true;
 				//파일 처리
+				boolean isFirstImage = true;
 				int seq = 1;
 				for (MultipartFile file : files) {
 					// 파일 이름 UUID 이용해 수정
@@ -119,7 +122,7 @@ public class ImagePostController {
 						image.setPost(post.getId());
 						image.setPath(uploadFile.getAbsolutePath());
 						image.setSeq(seq);
-						
+						image.setFileName(uploadFile.getName());
 						imageService.upload(image);
 						seq++;
 						
@@ -188,5 +191,149 @@ public class ImagePostController {
 		}
 		
 		return imageByte;
+	}
+	
+	@RequestMapping(value="/bbs/postImage/{post}.do", method=RequestMethod.GET)
+	@ResponseBody
+	public Map<Integer, byte[]> getImages(@PathVariable int post){
+		List<Image> images = imageService.readByPost(post);
+		Map<Integer, byte[]> result = new HashMap<Integer, byte[]>();
+		int i = 0;
+		
+		for(Image img : images){
+			File imgFile = new File(img.getPath());
+			FileInputStream fis;
+			byte[] imgByte = new byte[(int) imgFile.length()];
+			
+			try{
+				fis = new FileInputStream(imgFile);
+				fis.read(imgByte);
+				fis.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			result.put(i, imgByte);
+			i++;
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping("/bbs/imagePostDelete/{id}.do")
+	public String imagePostDelete(@PathVariable int id){
+		if(deleteFiles(id)){
+			imagePostService.remove(id);
+		}
+		return "redirect:/bbs/imageList.do";
+	}
+	
+	private boolean deleteFiles(int id){
+		boolean deleteResult = true;
+		List<File> files = getFiles(id);
+		
+		for(File f : files){
+			if(!f.delete()){
+				deleteResult = false;
+			}
+		}
+		
+		imageService.removeByPostId(id);
+		
+		return deleteResult;
+	}
+	
+	private List<File> getFiles(int id){
+		List<File> files = new LinkedList<File>();
+		
+		if(!(imagePostService.readById(id).getThumbnail() == null)){
+			files.add(new File(imagePostService.readById(id).getThumbnail()));
+		
+			for(Image img : imageService.readByPost(id)){
+				String path = img.getPath();
+				files.add(new File(path));
+			}
+		}
+		
+		return files;
+	}
+	
+	@RequestMapping("/bbs/imagePostModify/{id}.do")
+	public ModelAndView imagePostModify(@PathVariable int id){
+		ModelAndView mav = new ModelAndView();
+		ImagePost post = imagePostService.readById(id);
+		mav.addObject("post", post);
+		mav.setViewName("bbs/imageModify");
+		return mav;
+	}
+	
+	@RequestMapping(value = "/bbs/imagePostModifyExec.do", method=RequestMethod.POST)
+	public ModelAndView imagePostModifyExec(MultipartHttpServletRequest req){
+		ModelAndView mav = new ModelAndView();
+		
+		List<MultipartFile> files = req.getFiles("files");
+		System.out.println(files);
+		String uploadPath = "C:\\egovbbs\\uploads";
+		//게시물 내용 수정
+		ImagePost post = new ImagePost();
+		post.setId(Integer.parseInt(req.getParameter("id")));
+		post.setTitle(req.getParameter("title"));
+		post.setContent(req.getParameter("content"));
+		imagePostService.update(post);
+		
+		//이미지 내용 수정
+		//기존에 저장된 이미지 삭제 후 새 이미지로 저장
+		System.out.println("Post ID : " + req.getParameter("id"));
+		if(deleteFiles(Integer.parseInt(req.getParameter("id")))){
+			
+			boolean isFirstImage = true;
+			int seq = 1;
+			try{
+				for (MultipartFile file : files) {
+					// 파일 이름 UUID 이용해 수정
+					UUID uuid = UUID.randomUUID();
+				
+					File uploadFile = new File(uploadPath, uuid.toString() + "_" + file.getOriginalFilename());
+				
+				
+					// 업로드 폴더가 없을 경우 생성
+					if (!uploadFile.exists()) {
+						uploadFile.mkdirs();
+					}
+					//업로드 전 확장자 체크. jpg, png 파일을 제외한 나머지는 업로드 X
+					String extension = FilenameUtils.getExtension(uploadFile.getAbsolutePath());
+				
+					if(extension.equals("jpg") || extension.equals("png")){
+						// 파일 업로드
+						file.transferTo(uploadFile);
+					
+						// DB에 이미지 경로 저장
+						logger.debug(post.getId());
+						Image image = new Image();
+						image.setPost(post.getId());
+						image.setPath(uploadFile.getAbsolutePath());
+						image.setSeq(seq);
+						image.setFileName(uploadFile.getName());
+						imageService.upload(image);
+						seq++;
+					
+						//첨부파일 중 첫번째 이미지 파일이면 썸네일 생성
+						if(isFirstImage){
+							File thumbnail = new File(uploadPath, "thumb_" + uploadFile.getName());
+							Thumbnails.of(uploadFile).size(450,200).outputFormat(extension).toFile(thumbnail);
+							//썸네일 생성 후 게시물에 썸네일 경로 추가
+							post.setThumbnail(thumbnail.getAbsolutePath());
+							imagePostService.updateThumbnailPath(post);
+							isFirstImage = false;
+						}	
+					}
+				}
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		mav.setViewName("redirect:/");
+		return mav;
 	}
 }
